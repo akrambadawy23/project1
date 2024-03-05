@@ -54,7 +54,8 @@ public class Main {
         for (int i = 0; i < files.length; i++) {
             long startTime = System.nanoTime();
             ArrayList<Integer> list = readFile(files[i]);
-            System.out.println("INVERSIONS: " + HeapSort.heapSort(list, 0));
+sort(list);
+System.out.println(list);
             long endTime = System.nanoTime();
             System.out.println("f" + (i + 1) + " TIME RUN: " + (endTime - startTime) / 1000000000 + " SECONDS");
         }
@@ -155,52 +156,32 @@ public class Main {
         return mergeSort(a, aux, 0, a.size()-1);
     }
 
-    /* Quick Sort
 
-    public static long sort(ArrayList<Integer> a, int lo, int hi, long count) {
 
-        if(hi <= lo) return count;
+    public static void sort(ArrayList<Integer> a) {
+        sort(a, 0, a.size() - 1);
+    }
 
-        int lt = lo;
-        int gt = hi;
-
-        Random rand = new Random();
-
+    // quicksort the subarray a[lo .. hi] using 3-way partitioning
+    private static void sort(ArrayList<Integer> a, int lo, int hi) {
+        if (hi <= lo) return;
+        int lt = lo, gt = hi;
         int v = a.get(lo);
-        if(a.get(hi) < a.get(lo))
-            v = a.get(hi);
-
-        int i = lo+1;
-
-        while(i <= gt) {
-            if(a.get(i).compareTo(v) < 0) {
-
-                int temp = a.get(lt);
-                a.set(lt, a.get(i));
-                a.set(i, temp);
-                count+=(i-lt)+1;
-                lt++;
-                i++;
-            } else if(a.get(i).compareTo(v) > 0) {
-                int temp = a.get(i);
-                a.set(i, a.get(gt));
-                a.set(gt, temp);
-                count+=(gt-i);
-                gt--;
-            }
-            else
-                i++;
+        int i = lo + 1;
+        while (i <= gt) {
+            int cmp = a.get(i).compareTo(v);
+            if      (cmp < 0)
+                Collections.swap(a, lt++, i++);
+            else if (cmp > 0)
+                Collections.swap(a, i, gt--);
+            else              i++;
         }
-        sort(a, lo, lt-1, count);
-        sort(a, gt+1, hi, count);
-        return count;
+
+        // a[lo..lt-1] < v = a[lt..gt] < a[gt+1..hi].
+        sort(a, lo, lt-1);
+        sort(a, gt+1, hi);
     }
 
-    public static long QuickSort(ArrayList<Integer> file) {
-        //Collections.shuffle(file);
-        return sort(file, 0, file.size()-1, 0);
-    }
-    */
     //HeapSort
 
     public static class HeapSort{
@@ -262,6 +243,4 @@ public class Main {
 
 
 
-    // Driver program
-}
-
+// Driver program
