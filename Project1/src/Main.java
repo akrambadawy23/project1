@@ -51,16 +51,13 @@ public class Main {
         //QUICK SORT OUTPUT
 
 
-    for (int i = 0; i < files.length; i++) {
-        long startTime = System.nanoTime();
-        ArrayList<Integer> list = readFile(files[i]);
-        System.out.println("INVERSIONS: " + HeapSort.heapSort(list, 0));
-        long endTime = System.nanoTime();
-        System.out.println("f" + (i + 1) + " TIME RUN: " + (endTime - startTime) / 1000000000 + " SECONDS");
-    }
-
-
-
+        for (int i = 0; i < files.length; i++) {
+            long startTime = System.nanoTime();
+            ArrayList<Integer> list = readFile(files[i]);
+            System.out.println("INVERSIONS: " + HeapSort.heapSort(list, 0));
+            long endTime = System.nanoTime();
+            System.out.println("f" + (i + 1) + " TIME RUN: " + (endTime - startTime) / 1000000000 + " SECONDS");
+        }
     }
     public static ArrayList<Integer> readFile(File f) {
         ArrayList<Integer> fin = new ArrayList<Integer>();
@@ -101,11 +98,6 @@ public class Main {
         }
         return count;
     }
-
-
-
-
-
 
     private static long merge(ArrayList<Integer> a, ArrayList<Integer> aux, int lo, int mid, int hi) {
         // precondition: a[lo .. mid] and a[mid+1 .. hi] are sorted subarrays
@@ -241,6 +233,7 @@ public class Main {
                 if (j < n && less(pq, j, j+1)) j++;
                 if (!less(pq, k, j)) break;
                 exch(pq, k, j);
+                inversionsCount+=(j-k)/2;
                 k = j;
             }
         }
@@ -254,12 +247,18 @@ public class Main {
         }
 
         private static long exch(ArrayList<Integer> pq, int i, int j) {
+
             int swap = pq.get(i-1);
             pq.set(i-1, pq.get(j-1));
             pq.set(j-1, swap);
-            return inversionsCount+=(j - i);
+            return inversionsCount;
         }
     }
+
+
+
+    // Driver program
+}
 
 
 
