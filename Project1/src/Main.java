@@ -34,29 +34,10 @@ File[] files = {f1file, f2file, f3file, f4file, f5file, f6file};
         //System.out.println(list);
 
         long endTime = System.nanoTime();
-        System.out.println("f" + (i + 1) + " TIME RUN: " + (endTime - startTime) / 1000000000 + " SECONDS");
+        System.out.println("f" + (i + 1) + " TIME RUN: " + (endTime - startTime) / 1000000 + " MILLISECONDS");
 
     }
 */
-/*
-        for (int i = 0; i < files.length; i++) {
-            long startTime = System.nanoTime();
-            ArrayList<Integer> list = readFile(files[i]);
-
-                System.out.println("INVERSIONS: " + BubbleSort(list));
-                // if(i < 2)
-                //System.out.println(list);
-
-
-            long endTime = System.nanoTime();
-            System.out.println("f" + (i + 1) + " TIME RUN: " + (endTime - startTime) / 1000000000 + " SECONDS");
-
-        }
-
- */
-
-
-
         for (int i = 0; i < files.length; i++) {
             long startTime = System.nanoTime();
             ArrayList<Integer> list = readFile(files[i]);
@@ -65,9 +46,30 @@ File[] files = {f1file, f2file, f3file, f4file, f5file, f6file};
             //System.out.println(list);
 
             long endTime = System.nanoTime();
+            System.out.println("f" + (i + 1) + " TIME RUN: " + (endTime - startTime) / 1000000 + " MILLISECONDS");
+
+        }
+        for (int i = 0; i < files.length; i++) {
+            long startTime = System.nanoTime();
+            ArrayList<Integer> list = readFile(files[i]);
+
+                System.out.println("INVERSIONS: " + BubbleSort(list));
+                // if(i < 2)
+                System.out.println(list);
+
+
+            long endTime = System.nanoTime();
             System.out.println("f" + (i + 1) + " TIME RUN: " + (endTime - startTime) / 1000000000 + " SECONDS");
 
         }
+
+
+
+
+
+
+
+
 
 
 
@@ -96,13 +98,13 @@ while(num != null) {
     public static long BubbleSort(ArrayList<Integer> list) {
         long count = 0;
 boolean swapped;
-        for(int i = 0; i < list.size(); i++) {
+        for(int i = 0; i < list.size()-1; i++) {
             swapped = false;
-            for(int j = i+1; j < list.size(); j++) {
-                if(list.get(i).compareTo(list.get(j)) > 0) {
+            for(int j = 0; j < list.size()-i-1; j++) {
+                if(list.get(j+1).compareTo(list.get(j)) < 0) {
                     int temp = list.get(j);
-                    list.set(j, list.get(i));
-                    list.set(i, temp);
+                    list.set(j, list.get(j+1));
+                    list.set(j+1, temp);
                     count++;
                     swapped = true;
                 }
