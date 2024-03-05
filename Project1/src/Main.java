@@ -7,7 +7,7 @@ import java.util.Random;
 // Press Shift twice to open the Search Everywhere dialog and type `show whitespaces`,
 // then press Enter. You can now see whitespace characters in your code.
 public class Main {
-
+    public static long county;
     static File f1file = new File("f1.txt");
     static  File f2file = new File("f2.txt");
     static  File f3file = new File("f3.txt");
@@ -25,7 +25,7 @@ public class Main {
 
         //MERGESORT OUTPUT
 
-        /*for (int i = 0; i < files.length; i++) {
+        for (int i = 0; i < files.length; i++) {
             long startTime = System.nanoTime();
             ArrayList<Integer> list = readFile(files[i]);
             System.out.println("Inversions " + mergeSort(list));
@@ -33,9 +33,18 @@ public class Main {
             System.out.println("f" + (i + 1) + " TIME RUN: " + (endTime - startTime) / 1000000000 + " SECONDS");
 
         }
-*/
-        /*
 
+
+        for (int i = 0; i < files.length; i++) {
+            county = 0;
+            long startTime = System.nanoTime();
+            ArrayList<Integer> list = readFile(files[i]);
+            quickSort(list);
+            System.out.println("Inversions: " + county);
+//System.out.println(list);
+            long endTime = System.nanoTime();
+            System.out.println("f" + (i + 1) + " TIME RUN: " + (endTime - startTime) / 1000000000 + " SECONDS");
+        }
         //BUBBLE SORT OUTPUT
 
         for (int i = 0; i < files.length; i++) {
@@ -46,19 +55,12 @@ public class Main {
             System.out.println("f" + (i + 1) + " TIME RUN: " + (endTime - startTime) / 1000000000 + " SECONDS");
         }
 
- */
+
 
         //QUICK SORT OUTPUT
 
 
-        for (int i = 0; i < files.length; i++) {
-            long startTime = System.nanoTime();
-            ArrayList<Integer> list = readFile(files[i]);
-sort(list);
-System.out.println(list);
-            long endTime = System.nanoTime();
-            System.out.println("f" + (i + 1) + " TIME RUN: " + (endTime - startTime) / 1000000000 + " SECONDS");
-        }
+
     }
     public static ArrayList<Integer> readFile(File f) {
         ArrayList<Integer> fin = new ArrayList<Integer>();
@@ -158,83 +160,63 @@ System.out.println(list);
 
 
 
-    public static void sort(ArrayList<Integer> a) {
-        sort(a, 0, a.size() - 1);
-    }
-
-    // quicksort the subarray a[lo .. hi] using 3-way partitioning
-    private static void sort(ArrayList<Integer> a, int lo, int hi) {
-        if (hi <= lo) return;
-        int lt = lo, gt = hi;
-        int v = a.get(lo);
-        int i = lo + 1;
-        while (i <= gt) {
-            int cmp = a.get(i).compareTo(v);
-            if      (cmp < 0)
-                Collections.swap(a, lt++, i++);
-            else if (cmp > 0)
-                Collections.swap(a, i, gt--);
-            else              i++;
+    public static ArrayList<Integer> quickSort(ArrayList<Integer> ar) {
+        long count = 0;
+        if (ar.size() <= 1) {
+            return ar;
         }
 
-        // a[lo..lt-1] < v = a[lt..gt] < a[gt+1..hi].
-        sort(a, lo, lt-1);
-        sort(a, gt+1, hi);
+        int mid = 0;
+        int pivot = ar.get(mid);
+
+        ArrayList<Integer> smaller = new ArrayList<>();
+        ArrayList<Integer> greater = new ArrayList<>();
+
+        // Track original indices (temporarily)
+        for (int ind = 0; ind < ar.size(); ind++) {
+            int val = ar.get(ind);
+            if (ind != mid) {
+                if (val < pivot) {
+                    smaller.add(val);
+                } else {
+                    greater.add(val);
+                }
+            }
+        }
+
+        // Inversion Counting
+        for (int i = 0; i < smaller.size(); i++) {
+            for (int j = 0; j < greater.size(); j++) {
+                if (i> j) {
+                    count++;
+                }
+            }
+        }
+county+=count;
+        ArrayList<Integer> ans = new ArrayList<Integer>();
+        ArrayList<Integer> sa1 = quickSort(smaller); // Recursive call
+        ArrayList<Integer> sa2 = quickSort(greater); // Recursive call
+
+        // Combine results
+        ans.addAll(sa1);
+        ans.add(pivot);
+        ans.addAll(sa2);
+
+        return ans;
     }
 
+    // Helper Class
+    static class IndexedValue {
+        int value;
+        int originalIndex;
+
+        public IndexedValue(int value, int originalIndex) {
+            this.value = value;
+            this.originalIndex = originalIndex;
+        }
+    }
     //HeapSort
 
-    public static class HeapSort{
-
-        static long inversionsCount = 0;
-        public static long heapSort(ArrayList<Integer> pq, long inversionsCount) {
-
-            int n = pq.size();
-
-            // heapify phase
-            for (int k = n/2; k >= 1; k--)
-                sink(pq, k, n);
-
-            // sortdown phase
-            int k = n;
-            while (k > 1) {
-                inversionsCount = exch(pq, 1, k--);
-                sink(pq, 1, k);
-            }
-            return inversionsCount;
-        }
-
-        /***************************************************************************
-         * Helper functions to restore the heap invariant.
-         ***************************************************************************/
-
-        private static void sink(ArrayList<Integer> pq, int k, int n) {
-            while (2*k <= n) {
-                int j = 2*k;
-                if (j < n && less(pq, j, j+1)) j++;
-                if (!less(pq, k, j)) break;
-                exch(pq, k, j);
-                inversionsCount+=(j-k)/2;
-                k = j;
-            }
-        }
-
-        /***************************************************************************
-         * Helper functions for comparisons and swaps.
-         * Indices are "off-by-one" to support 1-based indexing.
-         ***************************************************************************/
-        private static boolean less(ArrayList<Integer> pq, int i, int j) {
-            return pq.get(i-1).compareTo(pq.get(j-1)) < 0;
-        }
-
-        private static long exch(ArrayList<Integer> pq, int i, int j) {
-
-            int swap = pq.get(i-1);
-            pq.set(i-1, pq.get(j-1));
-            pq.set(j-1, swap);
-            return inversionsCount;
-        }
-    }
 
 
 
