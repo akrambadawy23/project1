@@ -60,9 +60,9 @@ File[] files = {f1file, f2file, f3file, f4file, f5file, f6file};
         for (int i = 0; i < files.length; i++) {
             long startTime = System.nanoTime();
             ArrayList<Integer> list = readFile(files[i]);
-            mergeSort(list);
+            System.out.println("Inversions " + mergeSort(list));
             // if(i < 2)
-            System.out.println(list);
+            //System.out.println(list);
 
             long endTime = System.nanoTime();
             System.out.println("f" + (i + 1) + " TIME RUN: " + (endTime - startTime) / 1000000000 + " SECONDS");
@@ -182,9 +182,8 @@ b = rand.nextInt(lo, hi);
         return count;
     }
 
-    private static void merge(ArrayList<Integer> a, ArrayList<Integer> aux, int lo, int mid, int hi) {
+    private static long merge(ArrayList<Integer> a, ArrayList<Integer> aux, int lo, int mid, int hi) {
         // precondition: a[lo .. mid] and a[mid+1 .. hi] are sorted subarrays
-
 
         // copy to aux[]
         long startTime = System.nanoTime();
@@ -193,6 +192,8 @@ b = rand.nextInt(lo, hi);
             //aux[k] = a[k];
             aux.set(k, a.get(k));
         }
+
+        long count = 0;
 //System.out.println(aux.size() + " " + a.size());
         // merge back to a[]
         int i = lo, j = mid+1;
@@ -203,30 +204,38 @@ b = rand.nextInt(lo, hi);
             else if (j > hi)
                 a.set(k, aux.get(i++));
             //a[k] = aux[i++];
-            else if (aux.get(j) < aux.get(i))
+            else if (aux.get(j) < aux.get(i)) {
                 a.set(k, aux.get(j++));
-            else
-                a.set(k, aux.get(i++));
-        }
+                count += mid-i+1;
 
+            }
+            else {
+                a.set(k, aux.get(i++));
+            }
+        }
+return count;
         // postcondition: a[lo .. hi] is sorted
     }
 
     // mergesort a[lo..hi] using auxiliary array aux[lo..hi]
-    private static void mergeSort(ArrayList<Integer> a, ArrayList<Integer> aux, int lo, int hi) {
-        if (hi <= lo) return;
+    private static long mergeSort(ArrayList<Integer> a, ArrayList<Integer> aux, int lo, int hi) {
+        long count = 0;
+        if (hi <= lo) return count;
         int mid = lo + (hi - lo) / 2;
-      mergeSort(a, aux, lo, mid);
-        mergeSort(a, aux, mid + 1, hi);
-        merge(a, aux, lo, mid, hi);
+     count+= mergeSort(a, aux, lo, mid);
+       count+= mergeSort(a, aux, mid + 1, hi);
+     count+=  merge(a, aux, lo, mid, hi);
+
+        return  count;
     }
 
     /**
      * Rearranges the array in ascending order, using the natural order.
      * @param a the array to be sorted
      */
-    public static void mergeSort(ArrayList<Integer> a) {
+    public static long mergeSort(ArrayList<Integer> a) {
+
         ArrayList<Integer> aux = new ArrayList<Integer>(a);
-        mergeSort(a, aux, 0, a.size()-1);
+        return mergeSort(a, aux, 0, a.size()-1);
     }
 }
